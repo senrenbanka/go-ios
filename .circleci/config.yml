@@ -12,7 +12,7 @@ jobs:
           key: go-mod-{{ checksum "go.sum" }}
       - run:
           name: Install dependencies
-          command: sudo apt-get install libusb-1.0-0-dev
+          command: sudo yum install libusbx-devel
       - run:
           name: Download Go modules
           command: go mod download
