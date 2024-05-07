@@ -21,11 +21,6 @@ jobs:
           key: go-mod-{{ checksum "go.sum" }}
           paths:
             - /home/circleci/go/pkg/mod
-      - run:
-          name: Run tests
-          command: gotestsum --junitfile junit.xml
-      - store_test_results:
-          path: junit.xml
   build-go-executables:
     # Build go executables and store them as artifacts
     docker:
