@@ -108,7 +108,7 @@ Usage:
   ios install --path=<ipaOrAppFolder> [options]
   ios uninstall <bundleID> [options]
   ios apps [--system] [--all] [--list] [--filesharing] [options]
-  ios launch <bundleID> [--wait] [options]
+  ios launch <bundleID> [--wait] [--env=<e>]... [options]
   ios kill (<bundleID> | --pid=<processID> | --process=<processName>) [options]
   ios runtest [--bundle-id=<bundleid>] [--test-runner-bundle-id=<testrunnerbundleid>] [--xctest-config=<xctestconfig>] [--log-output=<file>] [--test-to-run=<tests>]... [--test-to-skip=<tests>]... [--env=<e>]... [options]
   ios runwda [--bundleid=<bundleid>] [--testrunnerbundleid=<testbundleid>] [--xctestconfig=<xctestconfig>] [--arg=<a>]... [--env=<e>]... [options]
@@ -783,7 +783,9 @@ The commands work as following:
 		pControl, err := instruments.NewProcessControl(device)
 		exitIfError("processcontrol failed", err)
 
-		pid, err := pControl.LaunchApp(bundleID)
+		env := arguments["--env"].([]string)
+
+		pid, err := pControl.LaunchApp(bundleID, env)
 		exitIfError("launch app command failed", err)
 		log.WithFields(log.Fields{"pid": pid}).Info("Process launched")
 		if wait {
