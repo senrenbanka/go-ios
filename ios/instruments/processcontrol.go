@@ -2,6 +2,7 @@ package instruments
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/danielpaulus/go-ios/ios"
 	dtx "github.com/danielpaulus/go-ios/ios/dtx_codec"
@@ -15,7 +16,7 @@ type ProcessControl struct {
 
 // LaunchApp launches the app with the given bundleID on the given device.LaunchApp
 // Use LaunchAppWithArgs for passing arguments and envVars. It returns the PID of the created app process.
-func (p *ProcessControl) LaunchApp(bundleID string) (uint64, error) {
+func (p *ProcessControl) LaunchApp(bundleID string, envVars []string) (uint64, error) {
 	opts := map[string]interface{}{
 		"StartSuspendedKey": uint64(0),
 	}
@@ -25,6 +26,13 @@ func (p *ProcessControl) LaunchApp(bundleID string) (uint64, error) {
 	// NSUnbufferedIO seems to make the app send its logs via instruments using the outputReceived:fromProcess:atTime: selector
 	// We'll supply per default to get logs
 	env := map[string]interface{}{"NSUnbufferedIO": "YES"}
+	for _, entrystring := range envVars {
+		entry := strings.Split(entrystring, "=")
+		key := entry[0]
+		value := entry[1]
+		env[key] = value
+	}
+	
 	return p.StartProcess(bundleID, env, []interface{}{}, opts)
 }
 
